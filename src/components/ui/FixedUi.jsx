@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import { useGSAP } from '@gsap/react';
 import { useAppStore } from '@/Store';
 import { useLenis } from 'lenis/react';
-import RiveBar from '../rive/FlashLight';
+
 
 
 
@@ -37,7 +37,7 @@ const FixedUi = () => {
         <div className="rightBottom absolute bottom-10 right-10 cursor-pointer" onClick={() => lenis.scrollTo(0)}>滚动到 0</div>
         <div className="rightBottom absolute bottom-10 left-10" >左下</div>
          
-        <RiveBar />
+    
       </div>
     </>
   )

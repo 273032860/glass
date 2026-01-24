@@ -2,7 +2,7 @@ import { Canvas, extend } from "@react-three/fiber"
 import * as THREE from 'three/webgpu'
 import { Html, OrbitControls, PerspectiveCamera, Stats} from "@react-three/drei"
 import { Leva } from "leva"
-import RiveBar from "../rive/FlashLight"
+ 
 
 
 
@@ -35,16 +35,9 @@ const ThreeCavnas = () => {
         <mesh rotation-x={-Math.PI / 2} position={[0, 0, 0]}>
           <boxGeometry   />
           <meshStandardMaterial color="#444" metalness={0.5} roughness={0.5} />
-          <Html occlude="blending"  center transform rotation={[Math.PI / 2, 0, 0]} >
-            <div className="w-[200px] h-[200px]">
-              <RiveBar/>
-            </div>
-          </Html>
+           
         </mesh>
-        <mesh position={[0,0,2]}>
-          <planeGeometry args={[12,12]}/>
-          <meshBasicMaterial opacity={0.5} transparent />
-        </mesh>
+        
         <OrbitControls   makeDefault />
         </Canvas>
       </div>
