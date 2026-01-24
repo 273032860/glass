@@ -6,6 +6,7 @@ import ThreeCavnas from './components/3d/ThreeCavnas'
 import gsap from 'gsap'
 import FixedUi from './components/ui/FixedUi'
 import Timeline from './components/ui/Timeline'
+import { LenisScrollTriggerSync } from './components/scroll-trigger'
 
 
 function App() {
@@ -32,16 +33,23 @@ function App() {
       <ReactLenis 
         ref={lenisRef}
         root 
-        autoRaf={false} 
-        lerp={0.02}                    // 控制平滑度，越小越平滑（0.02-0.2）
-        duration={5}                // 滚动持续时间（秒）
-        easing={(t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))}  // 自定义缓动函数
-        gestureOrientation="vertical" // 手势方向
-        smoothWheel={true}            // 平滑滚轮
-        wheelMultiplier={0.9}           // 滚轮灵敏度
-        infinite={false}              // 无限滚动
-        orientation="vertical"        // 滚动方向
-      />
+        options={{
+        lerp:   0.125,          // 控制平滑度，越小越平滑（0.02-0.2）
+        // easing:(t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) , // 自定义缓动函数
+        autoRaf: false,
+        anchors: true,
+        autoToggle: true,
+        duration: 2,             // 滚动持续时间（秒）
+        // gestureOrientation="vertical" // 手势方向
+        // smoothWheel={true}            // 平滑滚轮
+        // wheelMultiplier={0.9}           // 滚轮灵敏度
+        // infinite:true             // 无限滚动
+        // orientation="vertical"        // 滚动方向
+      }}
+      >
+         <LenisScrollTriggerSync/>
+      </ReactLenis>
+     
       {/* {isLoading && <LoadingScreen setIsLoading={setIsLoading}/>} */}
       <ThreeCavnas/>
       <FixedUi/>
