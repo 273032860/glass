@@ -6,10 +6,11 @@ import ThreeCavnas from './components/3d/ThreeCavnas'
 import gsap from 'gsap'
 import FixedUi from './components/ui/FixedUi'
 import Timeline from './components/ui/Timeline'
+import RiveBar from './components/rive/FlashLight'
 
 
 function App() {
-   const lenisRef = useRef()
+  const lenisRef = useRef()
   const caption = useRef()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -44,8 +45,9 @@ function App() {
       />
       {/* {isLoading && <LoadingScreen setIsLoading={setIsLoading}/>} */}
       <ThreeCavnas/>
-      <FixedUi/>
-      <Timeline caption={caption}/>
+      {/* <FixedUi/>
+      <Timeline caption={caption}/> */}
+      {/* <RiveBar/> */}
       {/* <NewApp/> */}
     </>
   )
