@@ -1,37 +1,51 @@
 import gsap from 'gsap'
-import { useRef } from 'react'
-import { useEffect } from 'react'
+import { useRef, useEffect } from 'react'
+import { ReactLenis, useLenis } from 'lenis/react'
 import { LenisScrollTriggerSync } from './scroll-trigger'
-import ReactLenis from 'lenis/react'
 
 const Lenis = ({
   root,
   options,
-  syncScrollTrigger = false,
+  syncScrollTrigger = true, // 建议默认开启
 }) => {
   const lenisRef = useRef()
 
-  // 🚀 与gsap集成，gsap 与 lenis 同步 
+  // 🚀 获取 lenis 实例
+  const lenis = useLenis()
+
   useEffect(() => {
-      function update(time) {
-        lenisRef.current?.lenis?.raf(time * 1000)
+    if (!lenis) return
+
+    // 关键：定义驱动函数
+    function update(time) {
+      // 如果 lenis.stop() 被调用，isStopped 会变成 true
+      // 此时我们拦截掉 raf，滚动就会真正停止
+      if (!lenis.isStopped) {
+        lenis.raf(time * 1000)
       }
+    }
+
+    // 使用 GSAP 主时钟驱动
     gsap.ticker.add(update)
-      return () => gsap.ticker.remove(update)
-  }, [])
-    
+    gsap.ticker.lagSmoothing(0)
+
+    return () => {
+      gsap.ticker.remove(update)
+    }
+  }, [lenis])
+   
   return (
     <ReactLenis
       ref={lenisRef}
       root={root}
       options={{
         ...options,
-        lerp: options?.lerp ?? 0.125,
-        autoRaf: false,
+        lerp: options?.lerp ?? 0.1, // 稍微降低一点更丝滑
+        autoRaf: false, // 必须为 false，由 GSAP 接管
         anchors: true,
-        autoToggle: true,
       }}
     >
+      {/* 只有 root 模式下才需要同步 ScrollTrigger */}
       {syncScrollTrigger && root && <LenisScrollTriggerSync />}
     </ReactLenis>
   )

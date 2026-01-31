@@ -1,39 +1,33 @@
 import gsap from 'gsap'
-import { ScrollTrigger as GSAPScrollTrigger } from 'gsap/all'
+import { ScrollTrigger as GSAPScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLenis } from 'lenis/react'
-import { useEffect, useEffectEvent } from 'react'
+import { useEffect } from 'react'
 
-// Register ScrollTrigger once
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(GSAPScrollTrigger)
-  //   GSAPScrollTrigger.clearScrollMemory('manual')
-  //   GSAPScrollTrigger.defaults({
-  //     markers: process.env.NODE_ENV === 'development',
-  //   })
 }
 
-/**
- * Syncs GSAP ScrollTrigger with Lenis scroll position.
- * Must be rendered inside ReactLenis context.
- */
 export function LenisScrollTriggerSync() {
+  const lenis = useLenis()
+
   useEffect(() => {
-    GSAPScrollTrigger.update()
-  }, [])
+    if (!lenis) return
 
-  const handleUpdate = useEffectEvent(() => {
-    GSAPScrollTrigger.update()
-  })
+    // 每次 Lenis 滚动时，通知 ScrollTrigger 更新
+    // 这是官方推荐的最简同步方案
+    const scrollUpdate = () => GSAPScrollTrigger.update()
+    lenis.on('scroll', scrollUpdate)
 
-  const handleRefresh = useEffectEvent(() => {
+    // 当页面尺寸变化时刷新（例如图片加载后）
+    const refreshTrigger = () => GSAPScrollTrigger.refresh()
+    window.addEventListener('resize', refreshTrigger)
+
+    // 初始刷新
     GSAPScrollTrigger.refresh()
-  })
 
-  const lenis = useLenis(handleUpdate)
-
-  useEffect(() => {
-    if (lenis) {
-      handleRefresh()
+    return () => {
+      lenis.off('scroll', scrollUpdate)
+      window.removeEventListener('resize', refreshTrigger)
     }
   }, [lenis])
 

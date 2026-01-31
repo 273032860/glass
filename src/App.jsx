@@ -4,12 +4,11 @@ import { useLayoutEffect } from 'react'
 import ThreeCavnas from './components/3d/ThreeCavnas'
 import FixedUi from './components/ui/FixedUi'
 import Timeline from './components/ui/Timeline'
-import { LenisScrollTriggerSync } from './components/scroll-trigger'
 import Lenis from '@/components/Lenis'
 
 
 function App({
-  lenis = true,
+  lenisConfig = true,
 }) {
   
   const caption = useRef()
@@ -24,11 +23,19 @@ function App({
 
   return (
     <>
-      {lenis && <Lenis 
-      root 
-      options={typeof lenis === 'object' ? lenis : {
-        duration: 1.4,
-      }} />}
+      {/* 最佳方案：将配置合并到 Lenis 组件 */}
+      {lenisConfig && (
+        <Lenis 
+          root
+          syncScrollTrigger={true}
+          options={typeof lenisConfig === 'object' ? lenisConfig : {
+            duration: 1.4,
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+          }} 
+        />
+      )}
      
       {/* {isLoading && <LoadingScreen setIsLoading={setIsLoading}/>} */}
       <ThreeCavnas/>
