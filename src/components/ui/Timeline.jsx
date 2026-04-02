@@ -14,7 +14,7 @@ const Timeline = () => {
             <h1 className="text-[#84eb62] text-bold  text-7xl   ">联系方式</h1>
             <div className="flex-center gap-4 ">
               <img src="/wechat-logo.svg" alt="weixin" className="w-28 h-auto" />
-              <h1 className="text-[#84eb62] text-bold text-7xl    ">273032860</h1>
+              <h1 className="text-[#84eb62] text-bold text-7xl    ">syh273032860</h1>
             </div>
           </div>
         </div>
