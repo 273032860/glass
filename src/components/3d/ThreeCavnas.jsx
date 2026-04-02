@@ -1,47 +1,50 @@
-import { Canvas, extend } from "@react-three/fiber"
-import * as THREE from 'three/webgpu'
-import { Html, OrbitControls, PerspectiveCamera, Stats} from "@react-three/drei"
-import { Leva } from "leva"
- 
+import { Canvas, extend } from '@react-three/fiber';
+import * as THREE from 'three/webgpu';
+import { Leva } from 'leva';
+import ColorSpace_Mapping_exposure from './ColorSpace.jsx';
+import Scene1 from './scene1/Scene1.jsx';
+import TslEffect from './TslEffect.jsx';
+import { useRef } from 'react';
+import { useState } from 'react';
+import { Suspense } from 'react';
+import { Splat, useProgress } from '@react-three/drei';
+import { Model3 } from './scene2/Model3.jsx';
+import Scene2 from './scene2/Scene2.jsx';
 
+const ThreeCavnas = ({ isStart }) => {
+  const hudScene = useRef();
+  const hudCamera = useRef();
 
+  const [isVisible, setIsVisible] = useState(true);
 
-const ThreeCavnas = () => {
   return (
-     <div id="canvas">
-      <Leva position="bottom-right" />
-        <Canvas
-          shadows 
-          eventSource={document.getElementById("root")} 
-          // eventPrefix="client" 
-          gl={(props) => {
-          extend(THREE)
-          const renderer = new THREE.WebGPURenderer({ 
-            ...props, 
+    <div id="canvas">
+      <Leva position="bottom-right" hidden />
+      <Canvas
+        shadows
+        style={{ opacity: isStart ? 1 : 0.001, transition: 'opacity 2s ease-in' }}
+        // eventSource={document.getElementById('fixedUi')}
+        // eventPrefix="client"
+        gl={(props) => {
+          extend(THREE);
+          const renderer = new THREE.WebGPURenderer({
+            ...props,
             antialias: true,
             alpha: true,
             powerPreference: 'high-performance',
-            // forceWebGL:true // 强制使用 WebGL
-          })
-          return renderer.init().then(() => renderer)
+            // forceWebGL: true, // 强制使用 WebGL
+          });
+          return renderer.init().then(() => renderer);
         }}
-        >
-        <axesHelper args={[15]} />
-        <color attach="background" args={['#343434']} />
-        <PerspectiveCamera  far={100} near={0.1}  position={[0,0,10]} makeDefault/>
-        <Stats/>
-         
-        
-        <mesh rotation-x={-Math.PI / 2} position={[0, 0, 0]}>
-          <boxGeometry   />
-          <meshStandardMaterial color="#444" metalness={0.5} roughness={0.5} />
-           
-        </mesh>
-        
-        <OrbitControls   makeDefault />
-        </Canvas>
-      </div>
-  )
-}
-export default ThreeCavnas
- 
+      >
+        <Suspense>
+          <Scene1 isVisible={isVisible} />
+          <Scene2 isVisible={isVisible} />
+          <ColorSpace_Mapping_exposure />
+          <TslEffect setIsVisible={setIsVisible} />
+        </Suspense>
+      </Canvas>
+    </div>
+  );
+};
+export default ThreeCavnas;
